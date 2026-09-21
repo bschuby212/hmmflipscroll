@@ -50,10 +50,10 @@ export function BeforeAfterSection() {
         />
       </div>
       <div className="mx-auto h-full max-w-[1200px] px-4 md:px-12">
-        <div className="grid h-full grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="relative lg:min-h-0">
+        <div className="grid h-full grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
+          <div className="relative md:min-h-0">
             <div
-              className="flex items-center justify-center lg:sticky"
+              className="flex items-center justify-center md:sticky"
               style={{ top: STICKY_TOP }}
             >
               <PhoneMockup
@@ -64,18 +64,18 @@ export function BeforeAfterSection() {
             </div>
           </div>
 
-          <div className="relative flex flex-col pb-[20vh] lg:pb-0">
+          <div className="relative flex flex-col pb-[20vh] md:pb-0">
             <CopyBlock
               content={comparisonContent.before}
               opacity={beforeOpacity}
               isActive={beforeOpacity > 0.5}
-              className="min-h-[85vh] lg:min-h-[100vh]"
+              className="min-h-[85vh] md:min-h-[100vh]"
             />
             <CopyBlock
               content={comparisonContent.after}
               opacity={afterOpacity}
               isActive={afterOpacity > 0.5}
-              className="min-h-[85vh] lg:min-h-[100vh]"
+              className="min-h-[85vh] md:min-h-[100vh]"
             />
           </div>
         </div>

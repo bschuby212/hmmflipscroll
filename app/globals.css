@@ -21,3 +21,21 @@ body {
   color: var(--text);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
+
+.phone-perspective {
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.phone-stage {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.phone-face,
+.phone-edge {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}

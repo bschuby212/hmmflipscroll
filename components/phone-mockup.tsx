@@ -6,7 +6,7 @@ const PHONE_WIDTH = 280;
 const PHONE_HEIGHT = Math.round((PHONE_WIDTH / 409) * 868);
 const SCREEN_WIDTH = Math.round((PHONE_WIDTH / 409) * 393);
 const SCREEN_HEIGHT = Math.round((PHONE_WIDTH / 409) * 852);
-const PHONE_DEPTH = 14;
+const PHONE_DEPTH = 18;
 const HALF_DEPTH = PHONE_DEPTH / 2;
 
 type PhoneMockupProps = {
@@ -22,27 +22,29 @@ export function PhoneMockup({
 }: PhoneMockupProps) {
   return (
     <div
-      className="mx-auto flex items-center justify-center"
+      className="phone-perspective mx-auto flex items-center justify-center"
       style={{
-        width: PHONE_WIDTH + 48,
-        height: PHONE_HEIGHT + 48,
-        perspective: "1200px",
+        width: PHONE_WIDTH + 64,
+        height: PHONE_HEIGHT + 64,
       }}
       aria-hidden="true"
     >
       <div
-        className="relative"
+        className="phone-stage relative"
         style={{
           width: PHONE_WIDTH,
           height: PHONE_HEIGHT,
-          transformStyle: "preserve-3d",
           transform: `rotateY(${rotation}deg)`,
-          willChange: "transform",
         }}
       >
-        <PhoneFace
-          transform={`translateZ(${HALF_DEPTH}px)`}
-          className="rounded-[36px] bg-[#080808] p-[6px] shadow-[0_30px_80px_rgba(0,0,0,0.35),inset_0_0_0_2px_#3a3a3e]"
+        {/* Front */}
+        <div
+          className="phone-face absolute inset-0 rounded-[36px] bg-[#080808] p-[6px]"
+          style={{
+            transform: `translateZ(${HALF_DEPTH}px)`,
+            boxShadow:
+              "0 30px 80px rgba(0,0,0,0.35), inset 0 0 0 2px #3a3a3e",
+          }}
         >
           <div
             className="relative overflow-hidden rounded-[30px] bg-white"
@@ -65,11 +67,15 @@ export function PhoneMockup({
               draggable={false}
             />
           </div>
-        </PhoneFace>
+        </div>
 
-        <PhoneFace
-          transform={`rotateY(180deg) translateZ(${HALF_DEPTH}px)`}
-          className="rounded-[36px] bg-[#1c1c1e] shadow-[inset_0_0_0_2px_#3a3a3e]"
+        {/* Back */}
+        <div
+          className="phone-face absolute inset-0 rounded-[36px] bg-[#1c1c1e]"
+          style={{
+            transform: `rotateY(180deg) translateZ(${HALF_DEPTH}px)`,
+            boxShadow: "inset 0 0 0 2px #3a3a3e",
+          }}
         >
           <div className="absolute left-1/2 top-[72px] h-[108px] w-[108px] -translate-x-1/2 rounded-[28px] bg-[#2c2c2e] shadow-[inset_0_0_0_1px_#444446]">
             <div className="absolute left-[18px] top-[18px] grid grid-cols-2 gap-[8px]">
@@ -80,78 +86,62 @@ export function PhoneMockup({
             <div className="absolute bottom-[16px] right-[16px] h-[20px] w-[20px] rounded-full bg-[#0a0a0a] ring-1 ring-[#444446]" />
           </div>
           <div className="absolute bottom-[48px] left-1/2 h-[6px] w-[96px] -translate-x-1/2 rounded-full bg-[#3a3a3c]" />
-        </PhoneFace>
+        </div>
 
-        <PhoneEdge
-          transform={`rotateY(90deg) translateZ(${PHONE_WIDTH / 2}px)`}
-          width={PHONE_DEPTH}
-          height={PHONE_HEIGHT}
-          className="bg-[#2a2a2c]"
+        {/* Right edge */}
+        <div
+          className="phone-edge absolute bg-[#2a2a2c]"
+          style={{
+            width: PHONE_DEPTH,
+            height: PHONE_HEIGHT,
+            left: "50%",
+            top: "50%",
+            marginLeft: -PHONE_DEPTH / 2,
+            marginTop: -PHONE_HEIGHT / 2,
+            transform: `rotateY(90deg) translateZ(${PHONE_WIDTH / 2}px)`,
+          }}
         />
-        <PhoneEdge
-          transform={`rotateY(-90deg) translateZ(${PHONE_WIDTH / 2}px)`}
-          width={PHONE_DEPTH}
-          height={PHONE_HEIGHT}
-          className="bg-[#222224]"
+        {/* Left edge */}
+        <div
+          className="phone-edge absolute bg-[#222224]"
+          style={{
+            width: PHONE_DEPTH,
+            height: PHONE_HEIGHT,
+            left: "50%",
+            top: "50%",
+            marginLeft: -PHONE_DEPTH / 2,
+            marginTop: -PHONE_HEIGHT / 2,
+            transform: `rotateY(-90deg) translateZ(${PHONE_WIDTH / 2}px)`,
+          }}
         />
-        <PhoneEdge
-          transform={`rotateX(90deg) translateZ(${PHONE_HEIGHT / 2}px)`}
-          width={PHONE_WIDTH}
-          height={PHONE_DEPTH}
-          className="bg-[#333335]"
+        {/* Top edge */}
+        <div
+          className="phone-edge absolute bg-[#333335]"
+          style={{
+            width: PHONE_WIDTH,
+            height: PHONE_DEPTH,
+            left: "50%",
+            top: "50%",
+            marginLeft: -PHONE_WIDTH / 2,
+            marginTop: -PHONE_DEPTH / 2,
+            transform: `rotateX(90deg) translateZ(${PHONE_HEIGHT / 2}px)`,
+          }}
         />
-        <PhoneEdge
-          transform={`rotateX(-90deg) translateZ(${PHONE_HEIGHT / 2}px)`}
-          width={PHONE_WIDTH}
-          height={PHONE_DEPTH}
-          className="bg-[#1a1a1c]"
+        {/* Bottom edge */}
+        <div
+          className="phone-edge absolute bg-[#1a1a1c]"
+          style={{
+            width: PHONE_WIDTH,
+            height: PHONE_DEPTH,
+            left: "50%",
+            top: "50%",
+            marginLeft: -PHONE_WIDTH / 2,
+            marginTop: -PHONE_DEPTH / 2,
+            transform: `rotateX(-90deg) translateZ(${PHONE_HEIGHT / 2}px)`,
+          }}
         />
       </div>
     </div>
-  );
-}
-
-function PhoneFace({
-  children,
-  transform,
-  className,
-}: {
-  children: React.ReactNode;
-  transform: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`absolute inset-0 [backface-visibility:hidden] ${className ?? ""}`}
-      style={{ transform }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function PhoneEdge({
-  transform,
-  width,
-  height,
-  className,
-}: {
-  transform: string;
-  width: number;
-  height: number;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`absolute left-1/2 top-1/2 [backface-visibility:hidden] ${className ?? ""}`}
-      style={{
-        width,
-        height,
-        marginLeft: -width / 2,
-        marginTop: -height / 2,
-        transform,
-      }}
-    />
   );
 }
 
