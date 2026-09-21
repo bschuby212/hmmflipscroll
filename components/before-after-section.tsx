@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 
-import { PhoneMockup, phoneDimensions } from "@/components/phone-mockup";
+import { PhoneMockup } from "@/components/phone-mockup";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 import { comparisonContent } from "@/lib/comparison-content";
 import {
@@ -13,8 +13,7 @@ import {
   getRotationFromProgress,
 } from "@/lib/scroll-animation";
 
-const SECTION_HEIGHT_VH = 230;
-const STICKY_TOP = `calc(50vh - ${phoneDimensions.height / 2}px)`;
+const SECTION_HEIGHT_VH = 260;
 
 export function BeforeAfterSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -49,34 +48,43 @@ export function BeforeAfterSection() {
           priority
         />
       </div>
-      <div className="mx-auto h-full max-w-[1200px] px-4 md:px-12">
-        <div className="grid h-full grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
-          <div className="relative md:min-h-0">
-            <div
-              className="flex items-center justify-center md:sticky"
-              style={{ top: STICKY_TOP }}
-            >
-              <PhoneMockup
-                rotation={rotation}
-                screenImage={activeContent.image}
-                screenAlt={`${activeContent.label} app screen`}
-              />
-            </div>
+
+      {/* Sticky stage keeps phone + copy vertically centered together */}
+      <div className="sticky top-0 flex h-screen w-full items-center">
+        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 md:grid-cols-2 md:gap-16 md:px-12">
+          <div className="flex justify-center">
+            <PhoneMockup
+              rotation={rotation}
+              screenImage={activeContent.image}
+              screenAlt={`${activeContent.label} app screen`}
+            />
           </div>
 
-          <div className="relative flex flex-col pb-[20vh] md:pb-0">
+          <div className="relative mx-auto w-full max-w-md md:mx-0">
             <CopyBlock
               content={comparisonContent.before}
               opacity={beforeOpacity}
               isActive={beforeOpacity > 0.5}
-              className="min-h-[85vh] md:min-h-[100vh]"
+              stacked
             />
             <CopyBlock
               content={comparisonContent.after}
               opacity={afterOpacity}
               isActive={afterOpacity > 0.5}
-              className="min-h-[85vh] md:min-h-[100vh]"
+              stacked
             />
+            {/* Invisible spacer so stacked absolute copy has height */}
+            <div className="invisible pointer-events-none" aria-hidden="true">
+              <p className="mb-3 text-sm font-medium uppercase tracking-[0.12em]">
+                {comparisonContent.before.label}
+              </p>
+              <h2 className="mb-5 text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+                {comparisonContent.before.heading}
+              </h2>
+              <p className="text-lg leading-relaxed">
+                {comparisonContent.before.description}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -88,26 +96,33 @@ function CopyBlock({
   content,
   opacity,
   isActive,
-  className,
+  stacked,
 }: {
   content: (typeof comparisonContent)["before"];
   opacity: number;
   isActive: boolean;
-  className?: string;
+  stacked?: boolean;
 }) {
   return (
     <article
-      className={`flex flex-col justify-center transition-opacity duration-150 ${className ?? ""}`}
-      style={{ opacity }}
+      className={
+        stacked
+          ? "absolute inset-0 flex flex-col justify-center"
+          : "flex flex-col justify-center"
+      }
+      style={{
+        opacity,
+        pointerEvents: isActive ? "auto" : "none",
+      }}
       aria-hidden={!isActive}
     >
       <p className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[var(--muted)]">
         {content.label}
       </p>
-      <h2 className="mb-5 max-w-md text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] md:text-4xl">
+      <h2 className="mb-5 text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] md:text-4xl">
         {content.heading}
       </h2>
-      <p className="max-w-md text-lg leading-relaxed text-[var(--muted)]">
+      <p className="text-lg leading-relaxed text-[var(--muted)]">
         {content.description}
       </p>
     </article>

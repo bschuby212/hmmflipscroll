@@ -23,7 +23,7 @@ body {
 }
 
 .phone-perspective {
-  perspective: 900px;
+  perspective: 1100px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
 }

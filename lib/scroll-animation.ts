@@ -1,5 +1,7 @@
-function easeInOutCubic(t: number): number {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function easeInOutQuint(t: number): number {
+  return t < 0.5
+    ? 16 * t * t * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 5) / 2;
 }
 
 export function clampProgress(value: number): number {
@@ -20,50 +22,48 @@ export function getSectionProgress(
   return clampProgress(scrolled / scrollableDistance);
 }
 
-/** Maps normalized scroll progress to Y-axis rotation in degrees. */
+/**
+ * Maps scroll progress → Y rotation.
+ * Longer rests at start/end; one continuous eased flip through the middle.
+ */
 export function getRotationFromProgress(progress: number): number {
-  if (progress <= 0.25) {
+  if (progress <= 0.18) {
     return 0;
   }
 
-  if (progress <= 0.5) {
-    const t = easeInOutCubic((progress - 0.25) / 0.25);
-    return t * 180;
+  if (progress >= 0.82) {
+    return 360;
   }
 
-  if (progress <= 0.75) {
-    const t = easeInOutCubic((progress - 0.5) / 0.25);
-    return 180 + t * 180;
-  }
-
-  return 360;
+  const t = easeInOutQuint((progress - 0.18) / 0.64);
+  return t * 360;
 }
 
-/** Swap screen image while the front face is hidden (at ~50% progress). */
+/** Swap while the front is fully edge-hidden (~180°). */
 export function getActiveScreen(progress: number): "before" | "after" {
-  return progress >= 0.5 ? "after" : "before";
+  return getRotationFromProgress(progress) >= 180 ? "after" : "before";
 }
 
 export function getBeforeCopyOpacity(progress: number): number {
-  if (progress <= 0.2) {
+  if (progress <= 0.28) {
     return 1;
   }
 
-  if (progress >= 0.45) {
+  if (progress >= 0.48) {
     return 0;
   }
 
-  return 1 - (progress - 0.2) / 0.25;
+  return 1 - easeInOutQuint((progress - 0.28) / 0.2);
 }
 
 export function getAfterCopyOpacity(progress: number): number {
-  if (progress <= 0.55) {
+  if (progress <= 0.52) {
     return 0;
   }
 
-  if (progress >= 0.8) {
+  if (progress >= 0.72) {
     return 1;
   }
 
-  return (progress - 0.55) / 0.25;
+  return easeInOutQuint((progress - 0.52) / 0.2);
 }
