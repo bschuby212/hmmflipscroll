@@ -67,3 +67,36 @@ export function getAfterCopyOpacity(progress: number): number {
 
   return easeInOutQuint((progress - 0.52) / 0.2);
 }
+
+const AFTER_COPY_RISE_PX = 28;
+
+/**
+ * Staggered child load-in for after copy (label → heading → body).
+ * Returns 0–1 progress for each line.
+ */
+export function getAfterCopyLineProgress(
+  progress: number,
+  lineIndex: 0 | 1 | 2,
+): number {
+  const start = 0.52 + lineIndex * 0.045;
+  const end = start + 0.2;
+
+  if (progress <= start) {
+    return 0;
+  }
+
+  if (progress >= end) {
+    return 1;
+  }
+
+  return easeInOutQuint((progress - start) / (end - start));
+}
+
+export function getAfterCopyLineTranslateY(
+  progress: number,
+  lineIndex: 0 | 1 | 2,
+): number {
+  const lineProgress = getAfterCopyLineProgress(progress, lineIndex);
+  const rise = AFTER_COPY_RISE_PX - lineIndex * 4;
+  return (1 - lineProgress) * rise;
+}

@@ -8,6 +8,8 @@ import { useScrollProgress } from "@/hooks/use-scroll-progress";
 import { comparisonContent } from "@/lib/comparison-content";
 import {
   getActiveScreen,
+  getAfterCopyLineProgress,
+  getAfterCopyLineTranslateY,
   getAfterCopyOpacity,
   getBeforeCopyOpacity,
   getRotationFromProgress,
@@ -72,6 +74,8 @@ export function BeforeAfterSection() {
               opacity={afterOpacity}
               isActive={afterOpacity > 0.5}
               stacked
+              loadIn
+              progress={progress}
             />
             {/* Invisible spacer so stacked absolute copy has height */}
             <div className="invisible pointer-events-none" aria-hidden="true">
@@ -97,12 +101,23 @@ function CopyBlock({
   opacity,
   isActive,
   stacked,
+  loadIn,
+  progress = 0,
 }: {
   content: (typeof comparisonContent)["before"];
   opacity: number;
   isActive: boolean;
   stacked?: boolean;
+  loadIn?: boolean;
+  progress?: number;
 }) {
+  const lineStyles = loadIn
+    ? ([0, 1, 2] as const).map((index) => ({
+        opacity: getAfterCopyLineProgress(progress, index),
+        transform: `translate3d(0, ${getAfterCopyLineTranslateY(progress, index)}px, 0)`,
+      }))
+    : null;
+
   return (
     <article
       className={
@@ -111,18 +126,27 @@ function CopyBlock({
           : "flex flex-col justify-center"
       }
       style={{
-        opacity,
+        opacity: loadIn ? 1 : opacity,
         pointerEvents: isActive ? "auto" : "none",
       }}
       aria-hidden={!isActive}
     >
-      <p className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[var(--muted)]">
+      <p
+        className="copy-load-line mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[var(--muted)]"
+        style={lineStyles?.[0]}
+      >
         {content.label}
       </p>
-      <h2 className="mb-5 text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] md:text-4xl">
+      <h2
+        className="copy-load-line mb-5 text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] md:text-4xl"
+        style={lineStyles?.[1]}
+      >
         {content.heading}
       </h2>
-      <p className="text-lg leading-relaxed text-[var(--muted)]">
+      <p
+        className="copy-load-line text-lg leading-relaxed text-[var(--muted)]"
+        style={lineStyles?.[2]}
+      >
         {content.description}
       </p>
     </article>

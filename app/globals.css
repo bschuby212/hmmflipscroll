@@ -39,3 +39,7 @@ body {
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
 }
+
+.copy-load-line {
+  will-change: opacity, transform;
+}
