@@ -132,19 +132,19 @@ function CopyBlock({
       aria-hidden={!isActive}
     >
       <p
-        className="copy-load-line mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[var(--muted)]"
+        className={`mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[var(--muted)]${loadIn ? " copy-load-line" : ""}`}
         style={lineStyles?.[0]}
       >
         {content.label}
       </p>
       <h2
-        className="copy-load-line mb-5 text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] md:text-4xl"
+        className={`mb-5 text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] md:text-4xl${loadIn ? " copy-load-line" : ""}`}
         style={lineStyles?.[1]}
       >
         {content.heading}
       </h2>
       <p
-        className="copy-load-line text-lg leading-relaxed text-[var(--muted)]"
+        className={`text-lg leading-relaxed text-[var(--muted)]${loadIn ? " copy-load-line" : ""}`}
         style={lineStyles?.[2]}
       >
         {content.description}
